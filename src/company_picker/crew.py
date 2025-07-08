@@ -2,6 +2,9 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai_tools import SerperDevTool
+from crewai.memory import LongTermMemory, ShortTermMemory, EntityMemory
+from crewai.memory.storage.rag_storage import RAGStorage
+from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from pydantic import BaseModel, Field
 from typing import List
 from .tools.push_tool import PushNotificationTool
@@ -41,6 +44,7 @@ class CompanyPicker():
         return Agent(
             config=self.agents_config['trending_company_finder'],
             tools=[SerperDevTool()],
+            memory=True,
         )
     @agent
     def financial_researcher(self) -> Agent:
@@ -55,8 +59,9 @@ class CompanyPicker():
         return Agent(
             config=self.agents_config['stock_picker'],
             tools=[PushNotificationTool()],
+            memory=True,
         )
-    
+
     @task
     def find_trending_companies(self) -> Task:
         """ Find trending companies in the news """
@@ -85,9 +90,46 @@ class CompanyPicker():
             config=self.agents_config['manager'],
             allow_delegation=True,
         )
+
+        short_term_memory = ShortTermMemory(
+            storage=RAGStorage(
+                embedder_config={
+                    "provider": "openai",
+                    "config": {
+                        "model": "text-embedding-3-small",
+                    }
+                },
+                type="short_term",
+                path="./memory/"
+            )
+        )
+
+        long_term_memory = LongTermMemory(
+            storage=LTMSQLiteStorage(
+                db_path="./memory/ltms.db"
+            )
+        )
+
+        entity_memory = EntityMemory(
+            storage=RAGStorage(
+                embedder_config={
+                    "provider": "openai",
+                    "config": {
+                        "model": "text-embedding-3-small",
+                    }
+                },
+                type="short_term",
+                path="./memory/"
+            )
+        )
+
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
             manager_agent=manager,
             process=Process.hierarchical,
+            memory=True,
+            short_term_memory=short_term_memory,
+            long_term_memory=long_term_memory,
+            entity_memory=entity_memory,
         )
