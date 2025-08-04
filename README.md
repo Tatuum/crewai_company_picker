@@ -1,54 +1,101 @@
 # CompanyPicker Crew
 
-Welcome to the CompanyPicker Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A collaborative multi-agent AI system built with [crewAI](https://crewai.com) that analyzes trending companies and picks the best investment opportunities. This project demonstrates how specialized AI agents can work together to deliver comprehensive financial analysis with minimal human input.
 
-## Installation
+## 🚀 Features
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+- **Trending Company Discovery**: AI agents find the latest trending companies in specified sectors
+- **Comprehensive Financial Analysis**: Deep research and analysis of company fundamentals
+- **Intelligent Stock Picking**: Advanced algorithms select the best investment opportunities
+- **Push Notifications**: Real-time alerts with investment decisions and rationale
+- **Detailed Reporting**: Comprehensive reports on selected and rejected companies
 
-First, if you haven't already, install uv:
+## 📋 Prerequisites
 
+- Python >= 3.10, < 3.14
+- [UV](https://docs.astral.sh/uv/) package manager
+- OpenAI API key
+
+## 🛠️ Installation
+
+1. **Install UV** (if not already installed):
+   ```bash
+   pip install uv
+   ```
+
+2. **Navigate to the project**:
+   ```bash
+   cd company_picker
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   crewai install
+   ```
+
+4. **Set up environment variables**:
+   Create a `.env` file in the project root and add your OpenAI API key:
+   ```bash
+   OPENAI_API_KEY=your_api_key_here
+   ```
+
+## 🎯 Quick Start
+
+Run the CompanyPicker crew with:
 ```bash
-pip install uv
+crewai run
 ```
 
-Next, navigate to your project directory and install the dependencies:
+This will analyze trending companies in the fashion sector and pick the best investment opportunity.
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
+## 📁 Project Structure
+
 ```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/company_picker/config/agents.yaml` to define your agents
-- Modify `src/company_picker/config/tasks.yaml` to define your tasks
-- Modify `src/company_picker/crew.py` to add your own logic, tools and specific args
-- Modify `src/company_picker/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
+company_picker/
+├── src/company_picker/
+│   ├── config/
+│   │   ├── agents.yaml      # Agent definitions and configurations
+│   │   └── tasks.yaml       # Task definitions and workflows
+│   ├── tools/
+│   │   └── push_tool.py     # Custom tools for agents
+│   ├── crew.py              # Crew orchestration logic
+│   └── main.py              # Entry point and sector configuration
+├── output/                  # Generated analysis and reports
+├── knowledge/               # Knowledge base and context
+└── tests/                   # Test files
 ```
 
-This command initializes the company_picker Crew, assembling the agents and assigning them tasks as defined in your configuration.
+## ⚙️ Configuration
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+### Agents (`src/company_picker/config/agents.yaml`)
 
-## Understanding Your Crew
+The project uses four specialized agents:
 
-The company_picker Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+1. **Trending Company Finder** - Discovers trending companies in the news
+2. **Financial Researcher** - Provides comprehensive company analysis
+3. **Stock Picker** - Selects the best investment opportunity
+4. **Manager** - Orchestrates the entire analysis process
 
-## Support
+### Tasks (`src/company_picker/config/tasks.yaml`)
 
-For support, questions, or feedback regarding the CompanyPicker Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+Tasks define the analysis workflow:
+- **Find Trending Companies**: Discover new trending companies in specified sectors
+- **Research Companies**: Conduct detailed financial analysis
+- **Pick Best Company**: Select optimal investment with push notification
 
-Let's create wonders together with the power and simplicity of crewAI.
+## 🔧 Customization
+
+Edit `src/company_picker/main.py` to change the sector or analysis parameters:
+
+```python
+inputs = {
+    'sector': 'technology'  # Change sector here
+}
+```
+
+## 📊 Example Output
+
+The crew generates:
+- `output/trending_companies.json` – List of discovered trending companies
+- `output/research_report.json` – Detailed financial analysis
+- `output/decision.md` – Final investment decision with rationale
